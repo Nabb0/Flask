@@ -1,0 +1,25 @@
+<html>
+
+<head>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/calendario.css') }}">
+    <title>Frasi Celebri</title>
+    <style>
+        body{
+            background-image: url("/static/images/sfondo.jpg");
+            background-size: cover;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1 class="titolo">FRASI CELEBRI</h1>
+
+    <div id="frase-autore">      
+        <p id="frase">{{frase}}</p>
+        <p id="autore">-{{autore}}</p>
+    </div>
+
+</body>
+
+</html>

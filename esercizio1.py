@@ -3,10 +3,11 @@
 #Utilizzare un file css per definire la grafica della pagina.
 
 from flask import Flask, render_template
+from datetime import datetime
 app = Flask(__name__)
 
 import random
-
+from datetime import datetime
 @app.route('/')
 def hello_world():
     return render_template("Esercizio.html")
@@ -26,6 +27,31 @@ def meteo():
     else:
         immagine = "/static/images/Sole-Spiaggia-Mare.jpg"
     return render_template("Meteo.html", meteo=immagine)
+
+ #3. modificare il server precedente per far sì chhe quando l'utente clicca sulla seconda immagine il server web risponde con una frase celebre,
+ #scelta casualmente da un elenco di 10 frasi (per ispirazione  https://www.frasimania.it/frasi-corte/). 
+ #Utilizzare una struttura dati adatta per contenere le frasi e gli autori Il sito deve visualizzare la frase con una certa grafica (a scelta) e anche l'autore (da visualizzare con una grafica diversa).
+ # Utilizzare un file css per definire la grafica della pagina. 
+ #.La route per accedere al serizio deve essere /frasicelebri
+@app.route("/frasicelebri")
+def libro():
+    frasi = [{"Autore": "Frida Kahlo" , "Frase": "Innamorati di te, della vita e dopo di chi vuoi." },
+    {"Autore": "Dietrich Bonhoeffer" , "Frase": "Contro la stupidità non abbiamo difese."},
+    {"Autore": "Charlie Chaplin" , "Frase": "Un giorno senza un sorriso è un giorno perso."},{"Autore": "Francesco Bacone" , "Frase": "Sapere è potere."},
+    {"Autore": "Italo Calvino" , "Frase": "Il divertimento è una cosa seria."},{"Autore": "Lewis Carroll" , "Frase": "Qui siamo tutti matti."},
+    {"Autore": "Johann Wolfgang von Goethe", "Frase": "Il dubbio cresce con la conoscenza."},{"Autore": "Luis Sepùlveda" , "Frase": "Vola solo chi osa farlo."},
+    {"Autore": "Lucio Anneo Seneca", "Frase": "Se vuoi essere amato, ama."},{"Autore": "Voltaire", "Frase": "Chi non ha bisogno di niente non è mai povero."}]
+    fRandom = random.randint(0,9)
+    return render_template("frasicelebri.html", autore = frasi[fRandom]["Autore"], frase = frasi[fRandom]["Frase"])
+
+#4. modificare il server precedente per far sì che quando l'utente clicca sulla terza immagine venga visualizzato il numero di giorni che mancano alla fine della scuola. 
+# Utilizzare un file css per definire la grafica della pagina.
+#La route per accedere al serizio deve essere /quantomanca
+@app.route("/quantomanca")
+def calendario():
+    now = datetime.now()
+    school = datetime(2022,6,8)
+    return render_template("calendario.html", data = (school - now).days)
 
 #ultima riga
 if __name__ == '__main__':
