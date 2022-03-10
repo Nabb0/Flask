@@ -1,7 +1,7 @@
 #realizzare un server web che permetta di conoscere capoluoghi di regione l'utente inaerisce il nome della regione 
 #e il proggramma restituisce il nome dell capoluogo di regine 
 #caricare i capoluogi e le regioni in una opportuta struttura dati
-#modificare poin l es precedente per permettere al utente di inserire un capoluogo e di avere la regione in cui si trova
+#modificare poi in l es precedente per permettere al utente di inserire un capoluogo e di avere la regione in cui si trova
 #l utente sceglie se avere la regione o il capo luogo selezionado un radio button 
 
 from flask import Flask,render_template,request
@@ -14,6 +14,17 @@ capoluoghiRegione = {"Abruzzo": "Aquila", "Basilicata": "Potenza", "Calabria": "
 @app.route('/', methods=['GET'])
 def hello_world():
    return render_template('RegioneOcapo.html')
+
+@app.route('/dates', methods=['GET'])
+def dates():
+ Scelta = request.args['Scelta'] #request = i dati dal client
+ if Scelta =='regione':
+     return render_template('Regioni.html')
+ else:
+     return render_template('Kapoluoghi.html')
+
+    
+
  
 
 if __name__ == '__main__':
