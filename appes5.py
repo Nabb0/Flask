@@ -5,6 +5,7 @@
 from flask import Flask, render_template,request
 app = Flask(__name__)
 import pandas as pd
+lista=[] #struttura dati temporanea va salvata sulla ram 
 
 @app.route('/', methods=['GET'])
 def home():
@@ -30,6 +31,25 @@ def dati():
     # salviamo il dataframe sul file dati.csv
     df1.to_csv('/workspace/Flask/templates/dati.csv', index=False)
     return df1.to_html()
+
+@app.route('/datiricerca', methods=['GET'])
+def ricerca():
+    return render_template('datiricerca.html')
+
+@app.route('/ricerca', methods=['GET'])
+def ric():
+    squadra = request.args['Squadra']
+    anno = request.args['Anno']
+    citta = request.args['Citta']
+    #caricamento dati dal file csv a un dataframe 
+    df2= pd.read_csv('/workspace/Flask/templates/dati.csv')
+    
+
+
+    #ricerca dei dati 
+    df3=df2[df2['squadra']==squadra]
+    return df3.to_html()
+
 
 if __name__ == '__main__':
   app.run(host='0.0.0.0', port=3246, debug=True)
