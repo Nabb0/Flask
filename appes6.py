@@ -2,6 +2,7 @@
 #ci deve essere una homepage con un link "quartieri di milano":
 #cliccando su questo link si deve visualizzare la mappa dei quartieri di milano 
 
+
 from flask import Flask, render_template, send_file, make_response, url_for, Response
 app = Flask(__name__)
 
@@ -20,7 +21,7 @@ milano = gpd.read_file('/workspace/Flask/ds964_nil_wm.zip')
 def hello_world():
     return render_template('simple.html')
 
-@app.route('/plot.png', methods=['GET'])
+@app.route('/quartieri.png', methods=['GET'])
 def plot_png():
 
     fig, ax = plt.subplots(figsize = (12,8))
@@ -30,5 +31,12 @@ def plot_png():
     output = io.BytesIO()
     FigureCanvas(fig).print_png(output)
     return Response(output.getvalue(), mimetype='image/png')
+
+@app.route('/quartieri', methods=("POST", "GET"))
+def mpl():
+    return render_template('plot.html',
+                           PageTitle = "Matplotlib")
+
+
 if __name__ == '__main__':
   app.run(host='0.0.0.0', port=3245, debug=True)
