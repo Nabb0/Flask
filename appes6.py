@@ -21,6 +21,17 @@ milano = gpd.read_file('/workspace/Flask/ds964_nil_wm.zip')
 def hello_world():
     return render_template('simple.html')
 
+@app.route('/cerca', methods=['GET'])
+def cerca():
+    return render_template('cerca.html')   
+
+@app.route('/cerca1', methods=['GET'])
+
+def cerca():
+    Quartiere  = request.args['Quartiere']
+
+    
+
 @app.route('/quartieri.png', methods=['GET'])
 def plot_png():
 
