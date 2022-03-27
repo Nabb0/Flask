@@ -5,7 +5,7 @@
 #Facoltativo
 #I nomi dei comuni sono link ipertestuali: se l'utente clicca su un comune ottiene la mappa del comune 
 
-from flask import Flask, render_template, send_file, make_response, url_for, Response,request
+from flask import Flask, render_template, request, Response
 app = Flask(__name__)
 
 import io
@@ -18,20 +18,26 @@ matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 
 comuni = gpd.read_file('/workspace/Flask/Comuni.zip')
-provincia = gpd.read_file('/workspace/Flask/Provincia.zip')
+province = gpd.read_file('/workspace/Flask/Provincia.zip')
 regioni = gpd.read_file('/workspace/Flask/Regioni.zip')
-ripgeo = gpd.read_file('/workspace/Flask/RipGeo.zip')
 
-@app.route('/', methods=['GET'])
-def home_page():
-    return render_template('home.html')
+@app.route("/", methods=["GET"])
+def home():
+    return render_template("radReg.html", regioni = regioni["DEN_REG"])
 
+@app.route("/radreg", methods=["GET"])
+def radreg():
+    regione = request.args["regione"]
+    regioneUtente = regioni[regioni["DEN_REG"] == regione]
+    provReg = province[province.within(regioneUtente.geometry.squeeze())]
+    return render_template("elencoProv.html", regione = regione, province = provReg["DEN_UTS"])
 
-
-
-
-
-
+@app.route("/elencoprov", methods=["GET"])
+def elncoprov():
+    provincia = request.args["provincia"]
+    provinciaUtente = province[province["DEN_UTS"] == provincia]
+    comProv = comuni[comuni.within(provinciaUtente.geometry.squeeze())]["COMUNE"].reset_index()
+    return render_template("result.html", provincia = provincia, tabella = comProv.to_html())
 
 
 
