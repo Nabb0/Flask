@@ -31,7 +31,7 @@ def selezione():
     elif scelta=="es3":
         return redirect(url_for("dropdown"))
 
-
+#es1
 
 @app.route('/numero', methods=['GET'])
 def numero():
@@ -58,7 +58,7 @@ def grafico():
 
     return Response(output.getvalue(), mimetype='image/png')
 
-
+#es2
 @app.route('/input', methods=['GET'])
 def input():
     return render_template("input.html")
@@ -84,7 +84,7 @@ def mappa():
     output = io.BytesIO()
     FigureCanvas(fig).print_png(output)
     return Response(output.getvalue(), mimetype='image/png')
-
+#es3
 @app.route('/dropdown', methods=['GET'])
 def dropdown():
     nomi_stazioni= stazioni.OPERATORE.to_list()
