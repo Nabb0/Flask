@@ -1,6 +1,8 @@
+#parte iniziale
 from flask import Flask,render_template, request, Response, redirect, url_for
 app = Flask(__name__)
 
+#Dichiarazioni delle variabili
 import io
 import pandas as pd
 import geopandas as gpd
@@ -11,12 +13,12 @@ import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 
-
+#Dichiarazioni delle dataframe
 stazioni=pd.read_csv('/workspace/Flask/coordfix_ripetitori_radiofonici_milano_160120_loc_final.csv', sep=';')
 stazionigeo=gpd.read_file('/workspace/Flask/ds710_coordfix_ripetitori_radiofonici_milano_160120_loc_final.geojson')
 quartieri = gpd.read_file('/workspace/Flask/ds964_nil_wm.zip')
 
-
+#Route della homepage
 @app.route('/', methods=['GET'])
 def home():
     return render_template('home.html')
@@ -32,9 +34,9 @@ def input():
 
 @app.route('/Qtscelto', methods=['GET'])
 def Qtscelto():
-    Qtscelto = request.args["quartiere"]
-    qt_utente=quartieri[quartieri.NIL.str.contains(Qtscelto)]
-    stazioni1=stazionigeo[stazionigeo.within(qt_utente.geometry.squeeze())]
+    Qtscelto = request.args["quartiere"] #prende la variabile del utente
+    qt_utente=quartieri[quartieri.NIL.str.contains(Qtscelto)] #controlla se il quartiere scelto dal utente sia valido
+    stazioni1=stazionigeo[stazionigeo.within(qt_utente.geometry.squeeze())]#cerca le stazioni al interno del quartiere
     return render_template("qtscelto.html",risultato=stazioni1.to_html())
 
 
@@ -43,19 +45,30 @@ def Qtscelto():
 #radio
 
 
+@app.route("/ricerca", methods=["GET"])
+def ricerca():
+    return render_template("ricerca.html")
 
+@app.route("/mappa", methods=["GET"])
+def mappa():
+    global quartiere_ricerca, stazioni_ricerca
+    quartiereUtente = request.args["quartiere"]
+    quartiere_ricerca = quartieri[quartieri["NIL"].str.contains(quartiereUtente)]
+    stazioni_ricerca = stazionigeo[stazionigeo.within(quartiere_ricerca.geometry.squeeze())]
+    return render_template("mappa.html", quartiere = quartiere_ricerca.NIL)
 
+#per avere l immagine con le stazione al interno dell qt
+@app.route("/mappa.png", methods=["GET"])
+def mappapng():
+    fig, ax = plt.subplots(figsize = (12,8))
 
+    quartiere_ricerca.to_crs(epsg=3857).plot(ax=ax, alpha=0.5)
+    stazioni_ricerca.to_crs(epsg=3857).plot(ax=ax, facecolor="k")
+    contextily.add_basemap(ax=ax)   
 
-
-
-
-
-
-
-
-
-
+    output = io.BytesIO()
+    FigureCanvas(fig).print_png(output)
+    return Response(output.getvalue(), mimetype='image/png')
 
 #esercizio 3
 
