@@ -62,8 +62,29 @@ def visualizzamezzi():
 def sceltalinea():
     global Mezzi
     Mezzi=Mezzi.astype({"linea":int})
+
     return render_template('sceltalinea.html',Mezzi=sorted(list(Mezzi.linea.drop_duplicates())))
 
+
+@app.route('/visualizza', methods=['GET'])
+def visualizza():
+    global Linea_utente
+    Linea_utente=request.args["mezzo"]
+    return render_template('visualizza.html')
+
+@app.route("/mappa.png", methods=["GET"])
+def mappapng():
+
+    fig, ax = plt.subplots(figsize = (12,8))
+
+    #quartieri.to_crs(epsg=3857).plot(ax=ax, alpha=0.5)
+    mezzi20=Mezzi[Mezzi.linea==Linea_utente]
+    mezzi20.to_crs(epsg=3857).plot(ax=ax)
+    contextily.add_basemap(ax=ax)   
+
+    output = io.BytesIO()
+    FigureCanvas(fig).print_png(output)
+    return Response(output.getvalue(), mimetype='image/png')
 
 
 
