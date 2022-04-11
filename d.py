@@ -43,11 +43,25 @@ def mappa():
 def mappapng():
 
     fig, ax = plt.subplots(figsize = (12,8))
-
-    #quartieri.to_crs(epsg=3857).plot(ax=ax, alpha=0.5)
-   # qt_utente=quartieri[quartieri.NIL==qt_utente]
+    
     quartiere=quartieri[quartieri.NIL.str.contains(qt_utente)]
     quartiere.to_crs(epsg=3857).plot(ax=ax)
+    contextily.add_basemap(ax=ax)   
+
+    output = io.BytesIO()
+    FigureCanvas(fig).print_png(output)
+    return Response(output.getvalue(), mimetype='image/png')
+
+
+@app.route("/mappa2.png", methods=["GET"])
+def mappapng2():
+
+    fig, ax = plt.subplots(figsize = (12,8))
+    
+    
+    Qt=quartieri[quartieri.NIL.str.contains(qt_utente)]
+    QtConfinanati=quartieri[quartieri.touches(Qt.geometry.squeeze())]
+    QtConfinanati.to_crs(epsg=3857).plot(ax=ax)
     contextily.add_basemap(ax=ax)   
 
     output = io.BytesIO()
