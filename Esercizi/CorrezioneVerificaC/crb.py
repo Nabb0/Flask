@@ -109,7 +109,7 @@ def mappapng():
 
     fig, ax = plt.subplots(figsize = (12,8))
 
-    #quartieri.to_crs(epsg=3857).plot(ax=ax, alpha=0.5)
+    quartieri.to_crs(epsg=3857).plot(ax=ax, alpha=0.0)
     mezzi20=Mezzi[Mezzi.linea==Linea_utente]
     mezzi20.to_crs(epsg=3857).plot(ax=ax)
     contextily.add_basemap(ax=ax)   
